@@ -6,31 +6,31 @@ import ImageUploader from './components/ImageUploader';
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
+    <main className="min-h-screen flex flex-col justify-center items-center w-full">
+      <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12 flex-1 flex flex-col justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
+          <div className="space-y-6 flex flex-col items-center md:items-start text-center md:text-left">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
               Vendez vos objets en quelques clics
             </h1>
             <p className="text-xl text-gray-600">
               Scannez vos objets, laissez l'IA les identifier et créez une annonce en quelques secondes.
             </p>
-            <div className="pt-4">
+            <div className="pt-4 w-full max-w-md mx-auto">
               <ImageUploader />
             </div>
           </div>
-          <div className="relative h-[600px] hidden md:block">
+          {/* <div className="relative h-[600px] hidden md:block">
             <img
-              src="/hero-image.jpg"
+              src="/user-image-1.jpg"
               alt="Illustration"
               className="object-cover rounded-lg shadow-xl"
               style={{ width: '100%', height: '100%' }}
             />
-          </div>
+          </div> */}
         </div>
 
-        <div className="mt-24">
+        <div className="mt-24 w-full">
           <h2 className="text-3xl font-bold text-center mb-12">
             Comment ça marche ?
           </h2>

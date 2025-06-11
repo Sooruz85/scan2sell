@@ -12,8 +12,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
-      <body className="bg-gray-50">
+    <html lang="fr" className="h-full">
+      <body className="bg-gray-50 min-h-screen h-full">
         {children}
       </body>
     </html>
