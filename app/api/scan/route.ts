@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
+import Replicate from 'replicate';
 import { writeFile } from 'fs/promises';
 import { join } from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { ImageAnnotatorClient } from '@google-cloud/vision';
-import { supabase } from '@/lib/supabase';
+
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
+});
 
 export async function POST(request: Request) {
   try {
@@ -17,49 +20,41 @@ export async function POST(request: Request) {
       );
     }
 
-    // Créer le dossier tmp s'il n'existe pas
-    const tmpDir = join(process.cwd(), 'tmp');
-    await writeFile(join(tmpDir, 'tmp'), '').catch(() => {});
-
     // Sauvegarder le fichier temporairement
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const filename = `${uuidv4()}-${file.name}`;
-    const filepath = join(tmpDir, filename);
+    const filepath = join(process.cwd(), 'tmp', filename);
     await writeFile(filepath, buffer);
 
-    // Initialiser le client Vision
-    const client = new ImageAnnotatorClient({
-      keyFilename: join(process.cwd(), 'google-credentials.json'),
-    });
-
-    // Analyser l'image
-    const [result] = await client.labelDetection(filepath);
-    const labels = result.labelAnnotations || [];
-
-    // Sauvegarder dans Supabase
-    const { error: dbError } = await supabase
-      .from('scanned_objects')
-      .insert({
-        image_url: null, // Pour l'instant, on ne stocke pas l'image
-        labels: labels.map(label => ({
-          description: label.description,
-          score: label.score,
-        })),
-      });
-
-    if (dbError) {
-      console.error('Erreur Supabase:', dbError);
-    }
+    // Analyser l'image avec Replicate
+    const output = await replicate.run(
+      "yorickvp/recognize-anything:2e57bd1a8c28e0c3cf6d45e477c0e9a3a0f7d6878e0b92942e49e14745f2307a",
+      {
+        input: {
+          image: filepath,
+          task: "object_detection",
+        }
+      }
+    );
 
     // Nettoyer le fichier temporaire
     await writeFile(filepath, '').catch(() => {});
 
+    // Formater les résultats
+    const labels = Array.isArray(output) ? output : [];
+    const category = labels[0]?.label || 'Non catégorisé';
+    const suggestedName = labels[0]?.label || 'Objet non identifié';
+    const suggestedDescription = `Objet identifié comme ${labels.map(l => l.label).join(', ')}`;
+
     return NextResponse.json({
       labels: labels.map(label => ({
-        description: label.description,
-        score: label.score,
+        label: label.label,
+        confidence: label.confidence,
       })),
+      category,
+      suggestedName,
+      suggestedDescription,
     });
   } catch (error) {
     console.error('Erreur lors du scan:', error);
