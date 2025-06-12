@@ -1,3 +1,5 @@
+export const runtime = 'nodejs';
+
 import { NextResponse } from 'next/server';
 import Replicate from 'replicate';
 import { writeFile } from 'fs/promises';

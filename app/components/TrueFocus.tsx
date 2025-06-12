@@ -1,4 +1,5 @@
 import React from 'react';
+import './TrueFocus.css';
 
 interface TrueFocusProps {
   sentence: string;
@@ -11,11 +12,7 @@ const TrueFocus: React.FC<TrueFocusProps> = ({ sentence }) => {
         {sentence.split('').map((char, index) => (
           <span
             key={index}
-            className="true-focus-char inline-block"
-            style={{
-              animationDelay: `${index * 0.05}s`,
-              marginRight: char === ' ' ? '0.5em' : '0.1em'
-            }}
+            className={`true-focus-char ${char === ' ' ? 'space' : ''}`}
           >
             {char}
           </span>
