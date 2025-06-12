@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase, ScannedObject } from '@/lib/supabase';
+import { supabase, ScannedObject } from '../../lib/supabase';
 import { FiArrowLeft } from 'react-icons/fi';
 import Link from 'next/link';
+import { HiOutlineClock } from 'react-icons/hi';
 
-export default function History() {
+export default function HistoryPage() {
   const [scans, setScans] = useState<ScannedObject[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,72 +31,29 @@ export default function History() {
   }, []);
 
   return (
-    <main className="min-h-screen p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold">Historique des scans</h1>
-          <Link
-            href="/"
-            className="inline-flex items-center text-primary hover:text-secondary"
-          >
-            <FiArrowLeft className="mr-2" />
-            Retour
-          </Link>
+    <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 py-8">
+      <div className="w-full max-w-4xl bg-white rounded-xl shadow-lg p-8">
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="bg-blue-100 rounded-full p-3">
+            <HiOutlineClock className="text-blue-500 w-7 h-7" />
+          </div>
+          <h1 className="text-2xl font-bold text-blue-700">Historique</h1>
         </div>
-
-        {loading ? (
-          <div className="text-center py-8">Chargement...</div>
-        ) : scans.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            Aucun scan n'a été effectué
-          </div>
-        ) : (
-          <div className="grid gap-6">
-            {scans.map((scan) => (
-              <div
-                key={scan.id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
-                  <div>
-                    {scan.image_url ? (
-                      <img
-                        src={scan.image_url}
-                        alt="Scanned object"
-                        className="w-full h-48 object-cover rounded-lg"
-                      />
-                    ) : (
-                      <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                        <span className="text-gray-400">Image non disponible</span>
-                      </div>
-                    )}
-                  </div>
-                  <div>
-                    <div className="mb-4">
-                      <h3 className="text-sm text-gray-500">
-                        {new Date(scan.created_at).toLocaleString('fr-FR')}
-                      </h3>
-                    </div>
-                    <div className="space-y-2">
-                      {scan.labels.map((label, index) => (
-                        <div
-                          key={index}
-                          className="flex justify-between items-center"
-                        >
-                          <span>{label.description}</span>
-                          <span className="text-primary font-medium">
-                            {Math.round(label.score * 100)}%
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+        <p className="text-gray-600 mb-8">Consultez l'historique de vos scans et actions.</p>
+        <div className="space-y-4 mb-8">
+          {[1,2,3].map((i) => (
+            <div key={i} className="flex items-center space-x-4 bg-gray-50 rounded-lg p-4 shadow">
+              <div className="text-gray-400 text-xl">⏳</div>
+              <div className="flex-1">
+                <div className="font-medium">Scan du 12/06/2024</div>
+                <div className="text-xs text-gray-500">Objet détecté : Exemple {i}</div>
               </div>
-            ))}
-          </div>
-        )}
+              <div className="text-xs text-blue-600">Succès</div>
+            </div>
+          ))}
+        </div>
+        <Link href="/scan" className="inline-block mt-2 text-blue-600 hover:underline font-semibold">Recommencer un scan</Link>
       </div>
-    </main>
+    </div>
   );
 }

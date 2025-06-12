@@ -8,101 +8,43 @@ import './components/TrueFocus.css';
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center w-full py-12">
-      <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center space-y-24">
-        {/* Section Hero */}
-        <div className="w-full flex flex-col items-center text-center space-y-8">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl max-w-3xl">
-            Vendez vos objets en quelques clics
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl">
-            Scannez vos objets, laissez l'IA les identifier et créez une annonce en quelques secondes.
+    <main className="min-h-[80vh] flex flex-col items-center justify-center w-full bg-white">
+      <div className="w-full max-w-5xl px-4 py-12 flex flex-col items-center space-y-16">
+        <div className="flex flex-col items-center text-center space-y-6">
+          <TrueFocus sentence="Vendez vos objets en quelques clics" />
+          <p className="text-lg text-gray-600 max-w-2xl">
+            Scannez, identifiez et vendez vos objets en toute simplicité grâce à l'IA. Téléversez une photo, laissez l'IA faire le travail, publiez votre annonce en un instant !
           </p>
           <div className="w-full max-w-md">
             <ImageUploader />
           </div>
         </div>
-
-        {/* Section Comment ça marche */}
-        <div className="w-full flex flex-col items-center space-y-16">
-          <div className="w-full max-w-3xl text-center">
-            <TrueFocus sentence="Comment ça marche ?" />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-5xl">
-            <div className="flex flex-col items-center space-y-4">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-8 h-8 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
+        <section className="w-full mt-8">
+          <h2 className="text-2xl font-bold text-center mb-8">Comment ça marche&nbsp;?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="flex flex-col items-center text-center space-y-2">
+              <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                <span className="text-2xl">📷</span>
               </div>
-              <h3 className="text-xl font-semibold">1. Prenez une photo</h3>
-              <p className="text-gray-600">
-                Photographiez votre objet sous un bon angle
-              </p>
+              <h3 className="font-semibold">1. Prenez une photo</h3>
+              <p className="text-gray-500 text-sm">Photographiez votre objet sous un bon angle.</p>
             </div>
-
-            <div className="flex flex-col items-center space-y-4">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-8 h-8 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
+            <div className="flex flex-col items-center text-center space-y-2">
+              <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                <span className="text-2xl">🧠</span>
               </div>
-              <h3 className="text-xl font-semibold">2. L'IA analyse</h3>
-              <p className="text-gray-600">
-                Notre intelligence artificielle identifie l'objet et ses caractéristiques
-              </p>
+              <h3 className="font-semibold">2. L'IA analyse</h3>
+              <p className="text-gray-500 text-sm">L'intelligence artificielle identifie l'objet et ses caractéristiques.</p>
             </div>
-
-            <div className="flex flex-col items-center space-y-4">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                <svg
-                  className="w-8 h-8 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+            <div className="flex flex-col items-center text-center space-y-2">
+              <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                <span className="text-2xl">💸</span>
               </div>
-              <h3 className="text-xl font-semibold">3. Vendez</h3>
-              <p className="text-gray-600">
-                Publiez votre annonce et commencez à vendre
-              </p>
+              <h3 className="font-semibold">3. Vendez</h3>
+              <p className="text-gray-500 text-sm">Publiez votre annonce et commencez à vendre.</p>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </main>
   );
