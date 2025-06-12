@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Notification from './Notification';
+import { supabase } from '../../lib/supabase';
 
 export default function ImageUploader() {
   const [isUploading, setIsUploading] = useState(false);
@@ -39,12 +40,37 @@ export default function ImageUploader() {
 
       const data = await response.json();
 
-      // Rediriger vers la page de création de produit avec les données
-      router.push(`/produit/nouveau?data=${encodeURIComponent(JSON.stringify(data))}`);
+      // Sauvegarder l'objet scanné dans Supabase
+      const { category, suggestedName, suggestedDescription, labels } = data;
+      let imageUrl = null;
+      // Upload de l'image sur Supabase Storage (optionnel)
+      const fileExt = file.name.split('.').pop();
+      const filePath = `scanned/${Date.now()}-${file.name}`;
+      const { data: storageData, error: storageError } = await supabase.storage.from('images').upload(filePath, file);
+      if (!storageError) {
+        const { data: publicUrlData } = supabase.storage.from('images').getPublicUrl(filePath);
+        imageUrl = publicUrlData?.publicUrl || null;
+      }
+      // Insérer dans la table scanned_objects
+      await supabase.from('scanned_objects').insert([
+        {
+          image_url: imageUrl,
+          name: suggestedName,
+          description: suggestedDescription,
+          category,
+          labels,
+        }
+      ]);
+
+      setNotification({
+        message: 'Objet scanné et sauvegardé avec succès !',
+        type: 'success'
+      });
+      // Optionnel : router.push('/library');
     } catch (error) {
       console.error('Erreur:', error);
       setNotification({
-        message: 'Une erreur est survenue lors de l\'analyse de l\'image',
+        message: 'Une erreur est survenue lors de l\'analyse ou de la sauvegarde',
         type: 'error'
       });
     } finally {

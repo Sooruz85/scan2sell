@@ -29,16 +29,25 @@ export async function POST(request: Request) {
     const filepath = join(process.cwd(), 'tmp', filename);
     await writeFile(filepath, buffer);
 
-    // Analyser l'image avec Replicate
-    const output = await replicate.run(
-      "yorickvp/recognize-anything:2e57bd1a8c28e0c3cf6d45e477c0e9a3a0f7d6878e0b92942e49e14745f2307a",
-      {
-        input: {
-          image: filepath,
-          task: "object_detection",
+    // Analyser l'image avec Replicate (bloc try/catch dédié)
+    let output;
+    try {
+      output = await replicate.run(
+        "yorickvp/recognize-anything:2e57bd1a8c28e0c3cf6d45e477c0e9a3a0f7d6878e0b92942e49e14745f2307a",
+        {
+          input: {
+            image: filepath,
+            task: "object_detection",
+          }
         }
-      }
-    );
+      );
+    } catch (iaError) {
+      console.error('Erreur Replicate:', iaError);
+      return NextResponse.json(
+        { error: "Erreur lors de l'analyse IA", details: iaError?.message || iaError },
+        { status: 500 }
+      );
+    }
 
     // Nettoyer le fichier temporaire
     await writeFile(filepath, '').catch(() => {});
@@ -61,7 +70,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Erreur lors du scan:', error);
     return NextResponse.json(
-      { error: 'Erreur lors de l\'analyse de l\'image' },
+      { error: 'Erreur lors de l\'analyse de l\'image', details: error?.message || error },
       { status: 500 }
     );
   }
